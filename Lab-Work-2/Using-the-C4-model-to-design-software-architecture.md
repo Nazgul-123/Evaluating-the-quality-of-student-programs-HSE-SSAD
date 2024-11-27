@@ -10,7 +10,6 @@
 ### 1. Диаграмма системного контекста
 ![С4-context](https://github.com/user-attachments/assets/971701fc-b46e-43d1-ba9c-1a7f480913db)
 
-
 **Описание:**
 - Определены основные внешние сущности
 - Обозначены границы системы
@@ -19,7 +18,6 @@
 
 ### 2. Диаграмма контейнеров
 ![C4-container](https://github.com/user-attachments/assets/033d7ca0-4919-45f1-ae7b-18600d98f885)
-
 
 **Контейнеры системы:**
 1. Чат-бот (Telegram Bot):
@@ -63,8 +61,7 @@
 
 
 ### 3. Диаграмма компонентов
-![C4-Компоненты(Система оценки кода)](https://github.com/user-attachments/assets/3d2ff960-6613-4b1c-90fe-5ad8f6c4d2d2)
-
+![C4-Компоненты(Система оценки кода)](https://github.com/user-attachments/assets/d1efcb60-3d67-4c5e-a43a-e176350349c1)
 
 ▎**Компоненты системы**
 1. **Telegram-бот**
@@ -92,8 +89,7 @@
 
 
 ### 4. Дополнительные диаграммы компонентов
-![C4-Компоненты(Чат-бот)](https://github.com/user-attachments/assets/f2d851a4-4ad7-4bb3-a646-5a8b723f9281)
-
+![C4-Компоненты(Чат-бот)](https://github.com/user-attachments/assets/bdc7b255-b72b-4226-b3c1-350bbef508cc)
 
 **Детализация внутренней структуры:**
 - Декомпозиция сервисов на под-компоненты

@@ -9,8 +9,8 @@ Requirements for the future software product/Graduation Internship (readme.md) a
 
 ## Пользователи
 
-- Преподаватели кафедры (4 человека)
-- Студенты специальности РИС (400 человек)
+- Преподаватели и ассистенты дисцпилины "Программирование на C#"(5 человек)
+- Студенты специальности РИС, изучающие "Программирование на C#" (400 человек)
 
 ## Требования к системе
 
@@ -40,4 +40,7 @@ Requirements for the future software product/Graduation Internship (readme.md) a
 - Машинное обучение: NLTK, Scikit–learn, PyTorch, Pandas, NumPy, Matplotlib
 
 Ссылка на образовательную дисциплину "Программирование 2023/24": https://perm.hse.ru/ba/isystems/courses/836747133.html
+
 Информация о студентах на образовательной программе "Разработка информационных систем для бизнеса" на 2023/24 год: https://perm.hse.ru/ba/isystems/vacant
+
+Базовое расписание студентов 1го курса направления РИС 2023/24: https://docs.yandex.ru/docs/view?url=ya-browser%3A%2F%2F4DT1uXEPRrJRXlUFoewruFoZJm7su_2nyRGv3YbXnzK5DvADOv-LfDQXgQ8hEo_W4d5zExOLoT-5PEUguWqntFKGLeAQGNpPiLZ21-RkpbtYJNt44yKXxOAjKfxN0szmeMHyPMRsCJAFd3IM7ksSvQ%3D%3D%3Fsign%3D9NF8BVOKgRydotRm2mlfCMxZslmYiMiy5zccbn7ddVU%3D&name=Расписание%20занятий%202%20модуль%20БАЗОВОЕ.xls&nosw=1

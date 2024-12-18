@@ -187,81 +187,136 @@ class CodeAnalyzer:
 ```        
 Модуль расширяем для добавления новых критериев проверки без изменения существующего кода.  
 
-* L (Liskov Substitution): Используются абстрактные интерфейсы для работы с базой данных и системой контроля версий.
+* L (Liskov Substitution):  Различные БД могут заменять друг друга.
 ```
-class DatabaseInterface:
-    def save(self, data):
-        raise NotImplementedError
+from abc import ABC, abstractmethod
+from typing import Dict, Any
+
+# L (Liskov Substitution)
+class DatabaseInterface(ABC):
+    @abstractmethod
+    def save(self, data: Dict[str, Any]) -> None:
+        """Абстрактный метод сохранения данных"""
+        pass
 
 class SQLiteDatabase(DatabaseInterface):
-    def save(self, data):
-        # Логика для SQLite
-        print("Сохранено в SQLite:", data)
+    def save(self, data: Dict[str, Any]) -> None:
+        """Конкретная реализация сохранения в SQLite"""
+        print(f"Сохранено в SQLite: {data}")
 
-class MockDatabase(DatabaseInterface):
-    def save(self, data):
-        # Логика для тестов
-        print("Сохранено в Mock DB:", data)
+class PostgreSQLDatabase(DatabaseInterface):
+    def save(self, data: Dict[str, Any]) -> None:
+        """Альтернативная реализация для PostgreSQL"""
+        print(f"Сохранено в PostgreSQL: {data}")
 
-# Пример использования
-db = SQLiteDatabase()
-db.save({"key": "value"})
-
-test_db = MockDatabase()
-test_db.save({"key": "value"})
+class DatabaseManager:
+    def __init__(self, database: DatabaseInterface):
+        self._database = database
+    
+    def persist_data(self, data: Dict[str, Any]) -> None:
+        """Метод для сохранения данных через абстракцию"""
+        self._database.save(data)
 ```
 Интерфейс для базы данных позволяет подменять реализацию без изменения логики.  
  
-* I (Interface Segregation): Логика работы Telegram-бота разделена на интерфейсы для преподавателей и студентов.
+* I (Interface Segregation): Раздельные действия для студентов и преподавателей
 ```
-class StudentInterface:
-    def upload_code(self, code):
+class StudentAction(ABC):
+    @abstractmethod
+    def upload_assignment(self, content: str) -> None:
+        """Действия студента"""
         pass
 
-class TeacherInterface:
-    def request_report(self, project_id):
+class TeacherAction(ABC):
+    @abstractmethod
+    def review_assignment(self, assignment_id: str) -> None:
+        """Действия преподавателя"""
         pass
 
-class TelegramBot(StudentInterface, TeacherInterface):
-    def upload_code(self, code):
-        print("Код загружен студентом.")
+class LearningPlatform:
+    def __init__(self, student_actions: StudentAction, 
+                 teacher_actions: TeacherAction):
+        self.student = student_actions
+        self.teacher = teacher_actions
 
-    def request_report(self, project_id):
-        print(f"Запрошен отчет по проекту {project_id}.")
-```        
+class TelegramLearningBot(StudentAction, TeacherAction):
+    def upload_assignment(self, content: str) -> None:
+        print(f"Студент загрузил задание: {content}")
+    
+    def review_assignment(self, assignment_id: str) -> None:
+        print(f"Преподаватель проверил задание {assignment_id}")
+```
+
 Разделение интерфейсов для студентов и преподавателей.  
 
-* D (Dependency Inversion): Используется DI-контейнер для управления зависимостями.
+* D (Dependency Inversion): Внедрение различных анализаторов кода
 ```
-class CodeAnalyzer:
-    def analyze(self, code):
-        return "Анализ выполнен"
+class CodeAnalyzer(ABC):
+    @abstractmethod
+    def analyze(self, code: str) -> str:
+        """Абстрактный анализатор кода"""
+        pass
 
-class ReportService:
-    def init(self, analyzer):
-        self.analyzer = analyzer  # Инъекция зависимости
+class StaticCodeAnalyzer(CodeAnalyzer):
+    def analyze(self, code: str) -> str:
+        """Конкретная реализация статического анализа"""
+        return "Выполнен статический анализ кода"
 
-    def generate_report(self, code):
-        analysis = self.analyzer.analyze(code)
-        return f"Отчет: {analysis}"
+class DynamicCodeAnalyzer(CodeAnalyzer):
+    def analyze(self, code: str) -> str:
+        """Конкретная реализация динамического анализа"""
+        return "Выполнен динамический анализ кода"
 
-# Передача зависимости извне
-analyzer = CodeAnalyzer()
-service = ReportService(analyzer)
-print(service.generate_report("код"))
+class ReportGenerator:
+    def __init__(self, analyzer: CodeAnalyzer):
+        self._analyzer = analyzer
+    
+    def generate_report(self, code: str) -> str:
+        """Генерация отчета с использованием внедренного анализатора"""
+        analysis_result = self._analyzer.analyze(code)
+        return f"Отчет: {analysis_result}"
 ```
 Использование инверсии зависимостей для анализа кода.
 
 ### 6. Дополнительные принципы разработки
-* *BDUF (Big Design Up Front/Масштабное проектирование прежде всего)*
-Применимость: Используется для детальной проработки архитектуры на начальном этапе.
-Обоснование: Поскольку проект разрабатывается по водопадной методологии, BDUF подходит для предотвращения ошибок проектирования.
+*1. BDUF (Big Design Up Front/Масштабное проектирование прежде всего)*
+Применимость: Частично ограничена
+Обоснование для использования:
+-Четкая архитектура системы с явно определенными компонентами
+-Необходимость интеграции нескольких сложных подсистем (Telegram-бот, ML-модели, GitHub)
+Причины ограничения:
+-Высокая вероятность изменения требований в процессе разработки
+-Риск "переусложнения" архитектуры на ранних этапах
+-Потребность в гибкости при разработке ML-компонентов
+Решение: Гибридный подход - укрупненное проектирование с итеративной детализацией
 
-* *SoC (Separation of Concerns/Принцип разделения ответственности)*
-Применимость: Принцип применяется для разделения логики на модули (анализ кода, генерация отчетов, Telegram-бот).
-Обоснование: Упрощает поддержку, повторное использование и тестирование кода.
-* *MVP (Minimum Viable Product/Минимально жизнеспособный продукт)*
-Применимость: Используется для быстрой реализации минимально жизнеспособного продукта.
-Обоснование: Ограниченные сроки и необходимость соблюдения графика учебного процесса.
-* *PoC (Proof of Concept/Доказательство концепции)*
-Отказ: Требования хорошо изучены, время ограничено, а проект следует жесткому графику, поэтому принцип избыточен.
+*2. SoC (Separation of Concerns/Принцип разделения ответственности)*
+Применимость: Полностью применим
+Обоснование:
+-Четкое разделение компонентов в архитектуре:
+-Telegram-бот (интерфейс)
+-Система оценки кода (бизнес-логика)
+-Модули анализа и классификации (ML-логика)
+-База данных (хранение)
+-Интеграция с GitHub (внешнее взаимодействие)
+Преимущества:
+-Независимое развитие и тестирование каждого компонента
+-Возможность замены/модернизации отдельных модулей
+-Упрощение поддержки и масштабирования системы
+
+*3. PoC (Proof of Concept/Доказательство концепции)*
+Применимость: Рекомендуется
+
+Обоснование:
+-Проверка feasibility ML-моделей анализа кода
+-Валидация интеграционных сценариев (Telegram + GitHub)
+-Оценка производительности и точности системы
+Ключевые области для PoC:
+-Точность ML-модели анализа кода на С#
+-Корректность интеграции с GitHub API
+-Производительность обработки кода
+-User Experience в Telegram-боте
+Решение:
+-Создание прототипа с минимальным функционалом
+-Пилотное тестирование на ограниченной выборке
+-Итеративная доработка based on feedback

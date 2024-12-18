@@ -62,7 +62,7 @@
 
 
 ### 4. Модель БД
-![Диаграмма классов БД (папс)](https://github.com/user-attachments/assets/2b69b54d-5d87-4c55-a17c-e8f0a7015e0a)
+![Диаграмма классов БД (папс)](https://github.com/user-attachments/assets/0dd52da1-60a6-4f71-a1e2-9586244b7425)
 
 ### 5. Применение основных принципов разработки
 *KISS (Keep It Simple, Stupid)*

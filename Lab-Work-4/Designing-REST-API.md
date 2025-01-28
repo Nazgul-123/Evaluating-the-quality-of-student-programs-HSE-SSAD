@@ -197,6 +197,7 @@
 ## Тестирование API  
 
 Тестирование проводилось с использованием **Postman**.
+![screenshot from Postman](https://github.com/user-attachments/assets/3091f9dc-421a-4d50-ac3f-15802327adff)
 
 ---
 

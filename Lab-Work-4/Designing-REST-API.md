@@ -270,7 +270,17 @@
     "id": 1,
     "name": "Иван Иванович"
 }
-``` 
+```
+
+#### - **Дополнительные обработчики ошибок**
+**Описание:** Обработка ошибки, которая возникает в критических сбоях в работе сервера.   
+**Пример ответа (500):**  
+```json
+[
+     {"error": "Internal Server Error"}
+]
+```
+
 ---
 
 ## Тестирование API  
@@ -303,33 +313,44 @@ reports = [
 # Получение списка студентов
 @app.route('/api/v1/students', methods=['GET'])
 def get_students():
-    return jsonify(students)
+    if not students:
+        return {"info": "Student list is empty"}, 200
+    return jsonify(students), 200
 
 # Создание нового студента
 @app.route('/api/v1/students', methods=['POST'])
 def create_student():
     data = request.get_json()
+    if not data or "name" not in data or "email" not in data:
+        return {"error": "Invalid input data"}, 400 #Bad Request («неправильный, некорректный запрос»)
     new_student = {"id": len(students) + 1, "name": data['name'], "email": data['email']}
     students.append(new_student)
-    return jsonify(new_student), 201
+    return jsonify(new_student), 201 #Created («создано»)
 
 # Обновление данных студента
 @app.route('/api/v1/students/<int:student_id>', methods=['PUT'])
 def update_student(student_id):
     data = request.get_json()
+    if not data:
+        return {"error": "Invalid input data"}, 400  # Bad Request («неправильный, некорректный запрос»)
     for student in students:
         if student['id'] == student_id:
             student.update(data)
-            return jsonify(student)
+            return jsonify(student), 200
     return {"error": "Student not found"}, 404
 
 # Удаление студента
 @app.route('/api/v1/students/<int:student_id>', methods=['DELETE'])
 def delete_student(student_id):
     global students, reports
+    student_exists = any(student["id"] == student_id for student in students)
+
+    if not student_exists:
+        return {"error": "Student not found"}, 404
+
     students = [student for student in students if student['id'] != student_id]
     reports = [report for report in reports if report['student_id'] != student_id]
-    return {"message": "Студент и его отчеты успешно удалены"}
+    return {"message": "Студент и его отчеты успешно удалены"}, 200
 
 # Получение студента по ID
 @app.route('/api/v1/students/<int:student_id>', methods=['GET'])
@@ -342,7 +363,9 @@ def get_student_by_id(student_id):
 # Получение списка отчетов
 @app.route('/api/v1/reports', methods=['GET'])
 def get_reports():
-    return jsonify(reports)
+    if not reports:
+        return {"info": "Report list is empty"}, 200
+    return jsonify(reports), 200
 
 # Получение отчета по ID
 @app.route('/api/v1/reports/<int:report_id>', methods=['GET'])
@@ -356,6 +379,13 @@ def get_report(report_id):
 @app.route('/api/v1/reports', methods=['POST'])
 def create_report():
     data = request.get_json()
+    if not data or "student_id" not in data:
+        return {"error": "Invalid input data"}, 400 # Bad Request («неправильный, некорректный запрос»)
+
+    student_exists = any(student["id"] == data["student_id"] for student in students)
+    if not student_exists:
+        return {"error": "Student not found"}, 404
+
     new_report = {
         "report_id": len(reports) + 1,
         "student_id": data['student_id'],
@@ -369,8 +399,17 @@ def create_report():
 @app.route('/api/v1/reports/<int:report_id>', methods=['DELETE'])
 def delete_report(report_id):
     global reports
+    report_exists = any(report["report_id"] == report_id for report in reports)
+
+    if not report_exists:
+        return {"error": "Report not found"}, 404
+
     reports = [report for report in reports if report['report_id'] != report_id]
-    return {"message": "Отчет успешно удален"}
+    return {"message": "Отчет успешно удален"}, 200
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return jsonify({"error": "Internal Server Error"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

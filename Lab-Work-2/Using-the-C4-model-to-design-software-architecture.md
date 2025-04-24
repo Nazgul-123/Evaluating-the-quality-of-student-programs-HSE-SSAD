@@ -8,7 +8,8 @@
 ---
 
 ### 1. Диаграмма системного контекста
-![С4-context](https://github.com/user-attachments/assets/971701fc-b46e-43d1-ba9c-1a7f480913db)
+![С4-context](https://github.com/user-attachments/assets/f5d1bdde-c425-4927-ab05-3580fe77927a)
+
 
 **Описание:**
 - Определены основные внешние сущности
@@ -17,7 +18,7 @@
 
 
 ### 2. Диаграмма контейнеров
-![C4-container](https://github.com/user-attachments/assets/033d7ca0-4919-45f1-ae7b-18600d98f885)
+![C4-container](https://github.com/user-attachments/assets/213926c9-f96d-4535-a265-3c8d4a8ab0e2)
 
 **Контейнеры системы:**
 1. Чат-бот (Telegram Bot):
@@ -61,7 +62,7 @@
 
 
 ### 3. Диаграмма компонентов
-![C4-Компоненты(Система оценки кода)](https://github.com/user-attachments/assets/d1efcb60-3d67-4c5e-a43a-e176350349c1)
+![C4-Компоненты(Система оценки кода)](https://github.com/user-attachments/assets/3432a964-5314-4f67-a35b-6b63a9e8b8c4)
 
 ▎**Компоненты системы**
 1. **Telegram-бот**
@@ -89,7 +90,7 @@
 
 
 ### 4. Дополнительные диаграммы компонентов
-![C4-Компоненты(Чат-бот)](https://github.com/user-attachments/assets/bdc7b255-b72b-4226-b3c1-350bbef508cc)
+![C4-Компоненты(Чат-бот)](https://github.com/user-attachments/assets/be3fcad1-3516-4819-98da-d51fe0852ade)
 
 **Детализация внутренней структуры:**
 - Декомпозиция сервисов на под-компоненты
